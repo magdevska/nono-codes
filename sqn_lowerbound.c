@@ -1,19 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <math.h>
+
+#include "common_functions.h"
 
 static uint64_t snq;
 
-uint64_t compute_max_cardinality(uint64_t* left, uint64_t* right, int set_index) {
-    uint64_t size = 0;
-    for (int i = 0; i < set_index; i++) {
-        size += left[i] * right[set_index - 1 - i];
-    }
-    return size;
-}
-
-int64_t compute_conditions(uint64_t* left, uint64_t* right, int64_t** parameters, int index, int n) {
+int64_t compute_conditions_lowerbound(uint64_t* left, uint64_t* right, int64_t** parameters, int index, int n) {
     for (int j = 0; j < index; j++) {
         for (int k = j - 1; k > - 1; k--) {
             parameters[j][k] = 0;
@@ -66,7 +59,7 @@ int lower_bound(uint64_t* left, uint64_t* right, int n, int q, int current_level
 
     int n_bound = (int) (n / (q + 1)) + 1;
     if (current_level <= n_bound) {
-        int64_t cond = compute_conditions(left, right, parameters, current_level, n);
+        int64_t cond = compute_conditions_lowerbound(left, right, parameters, current_level, n);
         for (int i = 0; 2*i <= cond && i <= current_code_size; i++) {
             left[current_level] = i;
             right[current_level] = current_code_size - i;
