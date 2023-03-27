@@ -58,7 +58,7 @@ int lower_bound(uint64_t* left, uint64_t* right, int n, int q, int current_level
     }
 
     int n_bound = (int) (n / (q + 1)) + 1;
-    if (current_level <= n_bound) {
+    if (current_level <= n_bound && current_level < n/2) {
         int64_t cond = compute_conditions_lowerbound(left, right, parameters, current_level, n);
         for (int i = 0; 2*i <= cond && i <= current_code_size; i++) {
             left[current_level] = i;
