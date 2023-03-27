@@ -30,22 +30,11 @@ int64_t compute_conditions_lowerbound(uint64_t *left, uint64_t *right, int64_t *
 
 int lower_bound(uint64_t *left, uint64_t *right, int n, int q, int current_level, int64_t **parameters) {
     if (current_level == 0) {
-        int64_t **parameters = (int64_t **) malloc(n * sizeof(int64_t *));
-
-        for (int i = 0; i < n; i++) {
-            parameters[i] = (int64_t *) malloc((i + 1) * sizeof(int64_t));
-            parameters[i][i] = 1;
-        }
-
         for (int i = 1; i <= q / 2; i++) {
             left[0] = i;
             right[0] = q - i;
             lower_bound(left, right, n, q, 1, parameters);
         }
-        for (int i = 0; i < n; i++) {
-            free(parameters[i]);
-        }
-        free(parameters);
         return 0;
     }
 
@@ -84,9 +73,18 @@ int main(__attribute__((unused)) int argc, char **argv) {
 
     uint64_t *left = (uint64_t *) malloc(n * sizeof(uint64_t));
     uint64_t *right = (uint64_t *) malloc(n * sizeof(uint64_t));
+    int64_t **parameters = (int64_t **) malloc(n * sizeof(int64_t *));
+    for (int i = 0; i < n; i++) {
+        parameters[i] = (int64_t *) malloc((i + 1) * sizeof(int64_t));
+        parameters[i][i] = 1;
+    }
 
-    lower_bound(left, right, n, q, 0, NULL);
+    lower_bound(left, right, n, q, 0, parameters);
 
+    for (int i = 0; i < n; i++) {
+        free(parameters[i]);
+    }
+    free(parameters);
     free(left);
     free(right);
 

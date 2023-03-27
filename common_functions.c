@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include "common_functions.h"
 
-uint64_t compute_max_cardinality(uint64_t *left, uint64_t *right, int set_index) {
+uint64_t compute_max_cardinality(const uint64_t *left, const uint64_t *right, int set_index) {
     uint64_t size = 0;
     for (int i = 0; i < set_index; i++) {
         size += left[i] * right[set_index - 1 - i];
@@ -10,7 +10,8 @@ uint64_t compute_max_cardinality(uint64_t *left, uint64_t *right, int set_index)
     return size;
 }
 
-int compute_conditions(uint64_t *left, uint64_t *right, int64_t **conditions, int64_t **parameters, int index, int n) {
+int compute_conditions(const uint64_t *left, const uint64_t *right, int64_t **conditions,
+                       int64_t **parameters, int index, int n) {
     for (int j = 0; j < index; j++) {
         for (int k = j - 1; k > -1; k--) {
             parameters[j][k] = 0;
