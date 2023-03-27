@@ -7,4 +7,7 @@ make clean
 
 # running
 find -name "*.out" | xargs echo
+
+# check for output consistency after changes
+make consistency
 ```
