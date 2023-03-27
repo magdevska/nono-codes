@@ -37,7 +37,7 @@ int solutions_iterator(uint64_t *left, uint64_t *right, int n, int q, int curren
         }
         solutions_iterator(left, right, n, q, current_level + 1, conditions, parameters);
     } else {
-        for (int i = 0; i <= current_code_size; i++) {
+        for (uint64_t i = 0; i <= current_code_size; i++) {
             left[current_level] = i;
             right[current_level] = current_code_size - i;
 
@@ -71,7 +71,7 @@ int solutions_iterator_caller(uint64_t *left, uint64_t *right, int n, int q) {
     return 0;
 }
 
-int main(int argc, char **argv) {
+int main(__attribute__((unused)) int argc, char **argv) {
     int q = (int) strtol(argv[1], NULL, 10);
     int n = (int) strtol(argv[2], NULL, 10);
 
