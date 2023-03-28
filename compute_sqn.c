@@ -27,7 +27,7 @@ int solutions_iterator(uint64_t *left, uint64_t *right, int n, int q, int curren
         return 0;
     }
 
-    if (current_level > n / 2 && current_level < n - 1) {
+    if (current_level > n / 2) {
         if (conditions[1][current_level] == 1) {
             left[current_level] = current_code_size;
             right[current_level] = 0;
