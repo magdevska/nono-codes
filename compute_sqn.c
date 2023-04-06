@@ -13,7 +13,14 @@ int solutions_iterator(uint64_t *left, uint64_t *right, int n, int q, int curren
             left[0] = i;
             right[0] = q - i;
             compute_conditions(left, right, conditions, parameters, current_level, n);
-            solutions_iterator(left, right, n, q, 1, conditions, parameters);
+            if (q == 2) {
+                left[1] = 1;
+                right[1] = 0;
+                compute_conditions(left, right, conditions, parameters, current_level + 1, n);
+                solutions_iterator(left, right, n, q, 2, conditions, parameters);
+            } else {
+                solutions_iterator(left, right, n, q, 1, conditions, parameters);
+            }
         }
         return 0;
     }
