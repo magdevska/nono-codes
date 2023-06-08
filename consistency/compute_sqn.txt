@@ -1,35 +1,98 @@
+size of L1: 1
 n: 3, q: 2, S(n,q): 1
+size of L1: 1
 n: 4, q: 2, S(n,q): 1
+size of L1: 1
 n: 5, q: 2, S(n,q): 2
+size of L1: 1
 n: 6, q: 2, S(n,q): 3
+size of L1: 1
 n: 7, q: 2, S(n,q): 5
+size of L1: 1
 n: 8, q: 2, S(n,q): 8
+size of L1: 1
 n: 9, q: 2, S(n,q): 14
+size of L1: 1
 n: 3, q: 3, S(n,q): 4
+size of L1: 1
 n: 4, q: 3, S(n,q): 8
+size of L1: 1
 n: 5, q: 3, S(n,q): 17
+size of L1: 1
 n: 6, q: 3, S(n,q): 41
+size of L1: 1
 n: 7, q: 3, S(n,q): 99
+size of L1: 1
 n: 8, q: 3, S(n,q): 247
+size of L1: 1
 n: 9, q: 3, S(n,q): 656
+size of L1: 1
+size of L1: 2
 n: 3, q: 4, S(n,q): 9
+size of L1: 1
+size of L1: 2
 n: 4, q: 4, S(n,q): 27
+size of L1: 1
+size of L1: 2
 n: 5, q: 4, S(n,q): 81
+size of L1: 1
+size of L1: 2
 n: 6, q: 4, S(n,q): 251
+size of L1: 1
+size of L1: 2
 n: 7, q: 4, S(n,q): 829
+size of L1: 1
+size of L1: 2
 n: 8, q: 4, S(n,q): 2753
+size of L1: 1
+size of L1: 2
 n: 9, q: 4, S(n,q): 9805
+size of L1: 1
+size of L1: 2
 n: 3, q: 5, S(n,q): 18
+size of L1: 1
+size of L1: 2
 n: 4, q: 5, S(n,q): 64
+size of L1: 1
+size of L1: 2
 n: 5, q: 5, S(n,q): 256
+size of L1: 1
+size of L1: 2
 n: 6, q: 5, S(n,q): 1024
+size of L1: 1
+size of L1: 2
 n: 7, q: 5, S(n,q): 4181
+size of L1: 1
+size of L1: 2
 n: 8, q: 5, S(n,q): 17711
+size of L1: 1
+size of L1: 2
 n: 9, q: 5, S(n,q): 76816
+size of L1: 1
+size of L1: 2
+size of L1: 3
 n: 3, q: 6, S(n,q): 32
+size of L1: 1
+size of L1: 2
+size of L1: 3
 n: 4, q: 6, S(n,q): 128
+size of L1: 1
+size of L1: 2
+size of L1: 3
 n: 5, q: 6, S(n,q): 625
+size of L1: 1
+size of L1: 2
+size of L1: 3
 n: 6, q: 6, S(n,q): 3125
+size of L1: 1
+size of L1: 2
+size of L1: 3
 n: 7, q: 6, S(n,q): 15625
+size of L1: 1
+size of L1: 2
+size of L1: 3
 n: 8, q: 6, S(n,q): 79244
+size of L1: 1
+size of L1: 2
+size of L1: 3
 n: 9, q: 6, S(n,q): 411481

@@ -10,17 +10,11 @@ int solutions_iterator(uint64_t *left, uint64_t *right, int n, int q, int curren
                        int64_t **parameters) {
     if (current_level == 0) {
         for (int i = 1; i <= q / 2; i++) {
+            printf("size of L1: %d\n", i);
             left[0] = i;
             right[0] = q - i;
             compute_conditions(left, right, conditions, parameters, current_level, n);
-            if (q == 2) {
-                left[1] = 1;
-                right[1] = 0;
-                compute_conditions(left, right, conditions, parameters, current_level + 1, n);
-                solutions_iterator(left, right, n, q, 2, conditions, parameters);
-            } else {
-                solutions_iterator(left, right, n, q, 1, conditions, parameters);
-            }
+            solutions_iterator(left, right, n, q, 1, conditions, parameters);
         }
         return 0;
     }
@@ -35,16 +29,24 @@ int solutions_iterator(uint64_t *left, uint64_t *right, int n, int q, int curren
     }
 
     if (current_level > n / 2) {
-        if (conditions[1][current_level] == 1) {
-            left[current_level] = current_code_size;
-            right[current_level] = 0;
-        } else {
-            left[current_level] = 0;
-            right[current_level] = current_code_size;
-        }
+        left[current_level] = conditions[1][current_level] ? current_code_size : 0;
+        right[current_level] = conditions[1][current_level] ? 0 : current_code_size;
         solutions_iterator(left, right, n, q, current_level + 1, conditions, parameters);
     } else {
+        int test_cut = 1;
+
+        for (int i = 0; i < current_level; i++) {
+            if (left[i] != right[i]) {
+                test_cut = 0;
+                break;
+            }
+        }
+
         for (uint64_t i = 0; i <= current_code_size; i++) {
+            if (test_cut && i > current_code_size / 2) {
+                break;
+            }
+
             left[current_level] = i;
             right[current_level] = current_code_size - i;
 
