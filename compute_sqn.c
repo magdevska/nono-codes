@@ -6,6 +6,77 @@
 
 static uint64_t snq;
 
+//struct opt_solution;
+typedef struct opt_solution {
+    uint64_t *left;
+    uint64_t *right;
+    int64_t *conditions;
+    struct opt_solution *next;
+} opt_solution;
+
+static opt_solution *optimum;
+
+int solutions_iterator(uint64_t *left, uint64_t *right, int n, int q, int current_level, int64_t **conditions,
+                       int64_t **parameters);
+
+int fill_second_half(uint64_t *left, uint64_t *right, int n, int current_level, int64_t **conditions) {
+    while (current_level < n - 1) {
+        if (conditions[0][current_level] > 0) {
+            left[current_level] = compute_max_cardinality(left, right, current_level);
+            right[current_level] = 0;
+        } else {
+            left[current_level] = 0;
+            right[current_level] = compute_max_cardinality(left, right, current_level);
+        }
+        current_level++;
+    }
+    uint64_t current_code_size = compute_max_cardinality(left, right, current_level);
+    if (current_code_size > snq) {
+        snq = current_code_size;
+
+        if (optimum != NULL) {
+            opt_solution *next = optimum->next;
+            while(next != NULL) {
+                free(next->left);
+                free(next->right);
+                free(next->conditions);
+                next = next->next;
+            }
+        } else {
+            optimum = (opt_solution *) malloc(sizeof(opt_solution));
+            optimum->left = (uint64_t *) malloc(n * sizeof(uint64_t));
+            optimum->right = (uint64_t *) malloc(n * sizeof(uint64_t));
+            optimum->conditions = (int64_t *) malloc(n * sizeof(int64_t));
+        }
+        optimum->next = NULL;
+        for (int i = 0; i < n; i++) {
+            optimum->left[i] = left[i];
+            optimum->right[i] = right[i];
+            optimum->conditions[i] = conditions[0][i];
+        }
+    }
+    else if (current_code_size == snq) {
+        opt_solution *new_optimum = (opt_solution *) malloc(sizeof(opt_solution));
+        new_optimum->left = (uint64_t *) malloc(n * sizeof(uint64_t));
+        new_optimum->right = (uint64_t *) malloc(n * sizeof(uint64_t));
+        new_optimum->conditions = (int64_t *) malloc(n * sizeof(int64_t));
+        new_optimum->next = NULL;
+
+        for (int i = 0; i < n; i++) {
+            new_optimum->left[i] = left[i];
+            new_optimum->right[i] = right[i];
+            new_optimum->conditions[i] = conditions[0][i];
+        }
+
+        opt_solution *next = optimum;
+        while (next->next != NULL) {
+            next = next->next;
+        }
+        next->next = new_optimum;
+    }
+    return 0;
+}
+
 int solutions_iterator(uint64_t *left, uint64_t *right, int n, int q, int current_level, int64_t **conditions,
                        int64_t **parameters) {
     if (current_level == 0) {
@@ -19,20 +90,10 @@ int solutions_iterator(uint64_t *left, uint64_t *right, int n, int q, int curren
         return 0;
     }
 
-    uint64_t current_code_size = compute_max_cardinality(left, right, current_level);
-    if (current_level == n - 1) {
-        if (current_code_size > snq) {
-            snq = current_code_size;
-        }
-
-        return 0;
-    }
-
-    if (current_level > n / 2) {
-        left[current_level] = conditions[1][current_level] ? current_code_size : 0;
-        right[current_level] = conditions[1][current_level] ? 0 : current_code_size;
-        solutions_iterator(left, right, n, q, current_level + 1, conditions, parameters);
+    if (current_level == n / 2) {
+        fill_second_half(left, right, n, current_level, conditions);
     } else {
+        uint64_t current_code_size = compute_max_cardinality(left, right, current_level);
         int test_cut = 1;
 
         for (int i = 0; i < current_level; i++) {
@@ -90,6 +151,7 @@ int main(__attribute__((unused)) int argc, char **argv) {
     }
 
     snq = 0;
+    optimum = NULL;
 
     uint64_t *left = (uint64_t *) malloc(n * sizeof(uint64_t));
     uint64_t *right = (uint64_t *) malloc(n * sizeof(uint64_t));
@@ -99,6 +161,23 @@ int main(__attribute__((unused)) int argc, char **argv) {
     free(right);
 
     printf("n: %d, q: %d, S(n,q): %ld\n", n, q, snq);
+
+    while(optimum != NULL) {
+        printf("L: ");
+        for (int i = 0; i < n - 1; i++) {
+            printf("%ld ", optimum->left[i]);
+        }
+        printf("R: ");
+        for (int i = 0; i < n - 1; i++) {
+            printf("%ld ", optimum->right[i]);
+        }
+        printf("; Conditions: ");
+        for (int i = n / 2; i < n - 1; i++) {
+            printf("%ld ", optimum->conditions[i]);
+        }
+        printf("\n");
+        optimum = optimum->next;
+    }
     return 0;
 }
 
