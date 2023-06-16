@@ -6,7 +6,6 @@
 
 static uint64_t snq;
 
-//struct opt_solution;
 typedef struct opt_solution {
     uint64_t *left;
     uint64_t *right;
@@ -16,12 +15,9 @@ typedef struct opt_solution {
 
 static opt_solution *optimum;
 
-int solutions_iterator(uint64_t *left, uint64_t *right, int n, int q, int current_level, int64_t **conditions,
-                       int64_t **parameters);
-
-int fill_second_half(uint64_t *left, uint64_t *right, int n, int current_level, int64_t **conditions) {
+int fill_second_half(uint64_t *left, uint64_t *right, int n, int current_level, int64_t *conditions) {
     while (current_level < n - 1) {
-        if (conditions[0][current_level] > 0) {
+        if (conditions[current_level] > 0) {
             left[current_level] = compute_max_cardinality(left, right, current_level);
             right[current_level] = 0;
         } else {
@@ -52,7 +48,7 @@ int fill_second_half(uint64_t *left, uint64_t *right, int n, int current_level, 
         for (int i = 0; i < n; i++) {
             optimum->left[i] = left[i];
             optimum->right[i] = right[i];
-            optimum->conditions[i] = conditions[0][i];
+            optimum->conditions[i] = conditions[i];
         }
     }
     else if (current_code_size == snq) {
@@ -65,7 +61,7 @@ int fill_second_half(uint64_t *left, uint64_t *right, int n, int current_level, 
         for (int i = 0; i < n; i++) {
             new_optimum->left[i] = left[i];
             new_optimum->right[i] = right[i];
-            new_optimum->conditions[i] = conditions[0][i];
+            new_optimum->conditions[i] = conditions[i];
         }
 
         opt_solution *next = optimum;
@@ -91,7 +87,7 @@ int solutions_iterator(uint64_t *left, uint64_t *right, int n, int q, int curren
     }
 
     if (current_level == n / 2) {
-        fill_second_half(left, right, n, current_level, conditions);
+        fill_second_half(left, right, n, current_level, conditions[0]);
     } else {
         uint64_t current_code_size = compute_max_cardinality(left, right, current_level);
         int test_cut = 1;
