@@ -4,7 +4,7 @@ OBJECTS=\
 	optimal_solutions \
 	sqn_lowerbound
 SHARED_FILES=common_functions.c common_functions.h
-CFLAGS=-std=c11 -Wall -Wextra -pedantic -pipe -Ofast -lm
+CFLAGS=-std=c11 -Wall -Wextra -pedantic -pipe -Ofast -lm -pthread 
 
 # the default is to build all binaries
 all: $(OBJECTS)
