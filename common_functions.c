@@ -16,20 +16,22 @@ int compute_conditions(const uint64_t *left, const uint64_t *right, int64_t **co
         for (int k = j - 1; k > -1; k--) {
             parameters[j][k] = 0;
             for (int l = k; l < j; l++) {
-                parameters[j][k] += (conditions[1][n - index + l - 2] * right[j - l - 1] +
-                                     (1 - conditions[1][n - index + l - 2]) * left[j - l - 1]) * parameters[l][k];
+//                parameters[j][k] += (conditions[1][n - index + l - 2] * right[j - l - 1] +
+//                                     (1 - conditions[1][n - index + l - 2]) * left[j - l - 1]) * parameters[l][k];
+                parameters[j][k] += (conditions[1][n - index + l - 1] * right[j - l - 1] +
+                                     (1 - conditions[1][n - index + l - 1]) * left[j - l - 1]) * parameters[l][k];
             }
         }
     }
 
     conditions[0][n - index - 2] = right[index] - left[index];
     for (int j = 0; j < index; j++) {
-        int value = 0;
+        int64_t value = 0;
         for (int l = 0; l <= j; l++) {
             value += parameters[j][l] * (right[l] - left[l]);
         }
-        value *= (conditions[1][n - index + j - 2] * right[index - j - 1] +
-                  (1 - conditions[1][n - index + j - 2]) * left[index - j - 1]);
+        value *= (conditions[1][n - index + j - 1] * right[index - j - 1] +
+                  (1 - conditions[1][n - index + j - 1]) * left[index - j - 1]);
         conditions[0][n - index - 2] += value;
     }
 
