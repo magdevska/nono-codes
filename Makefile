@@ -4,18 +4,23 @@ OBJECTS=\
 	optimal_solutions \
 	sqn_lowerbound
 SHARED_FILES=common_functions.c common_functions.h
-CFLAGS=-std=c11 -Wall -Wextra -pedantic -pipe -Ofast -lm -pthread 
+CFLAGS=-std=c11 -Wall -Wextra -pedantic -pipe -lm -pthread
+OPTIMIZATION_FLAGS=-Ofast
+DEBUG_FLAGS=-g3 -Og
 
 # the default is to build all binaries
 all: $(OBJECTS)
 
 # every binary: captures its name: its prerequisite is the .c file
+# additional whitespace for readable visual output
 $(OBJECTS): %: %.c
-	$(CC) $(CFLAGS) -o $@.out $(SHARED_FILES) $<
+	$(CC) $(CFLAGS)     $(OPTIMIZATION_FLAGS)    -o $@.out           $(SHARED_FILES) $<
+	$(CC) $(CFLAGS) $(DEBUG_FLAGS)       -o $@.out.debug     $(SHARED_FILES) $<
 
 .PHONY: clean
 clean:
 	rm -vf *.out
+	rm -vf *.out.debug
 
 # a run-all consistency command
 # for each obj in OBJECTS, add another prerequisite on consistency-obj
