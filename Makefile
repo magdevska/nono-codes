@@ -31,7 +31,8 @@ consistency: $(foreach obj, $(OBJECTS), consistency-$(obj))
 # for each obj in OBJECTS, define a rule named consistency-obj (referenced above)
 $(foreach obj, $(OBJECTS), consistency-$(obj)): consistency-%: %
 	mkdir -p consistency/
-	seq 2 6 | xargs -I XXX sh -c "seq 3 9 | xargs -I YYY ./$<.out XXX YYY" | tee consistency/$<.txt
+	seq 2 6 | xargs -I XXX sh -c "seq 3 9 | xargs -I YYY ./$<.out 0 XXX YYY" | tee consistency/$<-serial.txt
+	seq 2 6 | xargs -I XXX sh -c "seq 3 9 | xargs -I YYY ./$<.out 2 XXX YYY" | tee consistency/$<-maxlevel2.txt
 
 # a prerequisite for performance runs (which benchmarks all binaries) is that they're compiled
 .PHONY: performance

@@ -1,0 +1,70 @@
+n: 3, q: 2, S(n,q): 1
+L: 1 0 R: 1 1 ; Conditions: 0 
+n: 4, q: 2, S(n,q): 1
+L: 1 0 0 R: 1 1 1 ; Conditions: 0 
+n: 5, q: 2, S(n,q): 2
+L: 1 0 1 0 R: 1 1 0 1 ; Conditions: 1 0 
+n: 6, q: 2, S(n,q): 3
+L: 1 0 1 1 0 R: 1 1 0 0 2 ; Conditions: 1 0 
+n: 7, q: 2, S(n,q): 5
+L: 1 0 1 0 2 0 R: 1 1 0 1 0 2 ; Conditions: 0 1 0 
+n: 8, q: 2, S(n,q): 8
+L: 1 0 1 1 0 3 0 R: 1 1 0 0 2 0 3 ; Conditions: 0 1 0 
+n: 9, q: 2, S(n,q): 14
+L: 1 0 1 0 2 0 5 0 R: 1 1 0 1 0 2 0 5 ; Conditions: 2 0 1 0 
+n: 3, q: 3, S(n,q): 4
+L: 1 2 R: 2 0 ; Conditions: 1 
+n: 4, q: 3, S(n,q): 8
+L: 1 2 4 R: 2 0 0 ; Conditions: 1 
+n: 5, q: 3, S(n,q): 17
+L: 1 1 3 7 R: 2 1 0 0 ; Conditions: 2 1 
+n: 6, q: 3, S(n,q): 41
+L: 1 1 3 7 17 R: 2 1 0 0 0 ; Conditions: 2 1 
+n: 7, q: 3, S(n,q): 99
+L: 1 1 3 7 17 41 R: 2 1 0 0 0 0 ; Conditions: 2 2 1 
+n: 8, q: 3, S(n,q): 247
+L: 1 1 2 6 15 38 97 R: 2 1 1 0 0 0 0 ; Conditions: 4 2 1 
+n: 9, q: 3, S(n,q): 656
+L: 1 0 2 4 12 32 88 240 R: 2 2 0 0 0 0 0 0 ; Conditions: 20 8 4 1 
+n: 3, q: 4, S(n,q): 9
+L: 1 3 R: 3 0 ; Conditions: 2 
+n: 4, q: 4, S(n,q): 27
+L: 1 3 9 R: 3 0 0 ; Conditions: 2 
+n: 5, q: 4, S(n,q): 81
+L: 1 3 9 27 R: 3 0 0 0 ; Conditions: 3 2 
+n: 6, q: 4, S(n,q): 251
+L: 1 2 7 23 76 R: 3 1 0 0 0 ; Conditions: 5 2 
+n: 7, q: 4, S(n,q): 829
+L: 1 2 7 23 76 251 R: 3 1 0 0 0 0 ; Conditions: 10 5 2 
+n: 8, q: 4, S(n,q): 2753
+L: 1 1 5 17 61 217 773 R: 3 2 0 0 0 0 0 ; Conditions: 20 7 2 
+n: 9, q: 4, S(n,q): 9805
+L: 1 1 5 17 61 217 773 2753 R: 3 2 0 0 0 0 0 0 ; Conditions: 57 20 7 2 
+n: 3, q: 5, S(n,q): 18
+L: 2 6 R: 3 0 ; Conditions: 1 
+n: 4, q: 5, S(n,q): 64
+L: 1 4 16 R: 4 0 0 ; Conditions: 3 
+n: 5, q: 5, S(n,q): 256
+L: 1 4 16 64 R: 4 0 0 0 ; Conditions: 8 3 
+n: 6, q: 5, S(n,q): 1024
+L: 1 4 16 64 256 R: 4 0 0 0 0 ; Conditions: 8 3 
+n: 7, q: 5, S(n,q): 4181
+L: 1 3 13 55 233 987 R: 4 1 0 0 0 0 ; Conditions: 30 10 3 
+n: 8, q: 5, S(n,q): 17711
+L: 1 3 13 55 233 987 4181 R: 4 1 0 0 0 0 0 ; Conditions: 30 10 3 
+n: 9, q: 5, S(n,q): 76816
+L: 1 2 10 44 196 872 3880 17264 R: 4 2 0 0 0 0 0 0 ; Conditions: 156 44 12 3 
+n: 3, q: 6, S(n,q): 32
+L: 2 8 R: 4 0 ; Conditions: 2 
+n: 4, q: 6, S(n,q): 128
+L: 2 8 32 R: 4 0 0 ; Conditions: 2 
+n: 5, q: 6, S(n,q): 625
+L: 1 5 25 125 R: 5 0 0 0 ; Conditions: 15 4 
+n: 6, q: 6, S(n,q): 3125
+L: 1 5 25 125 625 R: 5 0 0 0 0 ; Conditions: 15 4 
+n: 7, q: 6, S(n,q): 15625
+L: 1 5 25 125 625 3125 R: 5 0 0 0 0 0 ; Conditions: 50 15 4 
+n: 8, q: 6, S(n,q): 79244
+L: 1 4 21 109 566 2939 15261 R: 5 1 0 0 0 0 0 ; Conditions: 68 17 4 
+n: 9, q: 6, S(n,q): 411481
+L: 1 4 21 109 566 2939 15261 79244 R: 5 1 0 0 0 0 0 0 ; Conditions: 248 68 17 4 
