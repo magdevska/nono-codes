@@ -63,8 +63,8 @@ int lower_bound(uint64_t *left, uint64_t *right, int n, int q, int current_level
 }
 
 int main(__attribute__((unused)) int argc, char **argv) {
-    int q = (int) strtol(argv[1], NULL, 10);
-    int n = (int) strtol(argv[2], NULL, 10);
+    int q = (int) strtol(argv[2], NULL, 10);
+    int n = (int) strtol(argv[3], NULL, 10);
 
     if (q < 2 || n < 3) {
         printf("invalid parameter values\n");

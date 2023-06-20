@@ -1,11 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 #include <pthread.h>
 
 #include "common_functions.h"
-
-#define MAX_LEVEL 3
 
 typedef struct opt_solution {
     uint64_t *left;
@@ -24,6 +21,7 @@ typedef struct subroutine_parameters {
     opt_solution *optimum;
 } subroutine_parameters;
 
+int max_level = 0;
 
 int test_repetitions(uint64_t *left, uint64_t *right, int current_level) {
     int test_cut = 1;
@@ -111,10 +109,6 @@ int solutions_iterator(uint64_t *left, uint64_t *right, int n, int q, int curren
                 break;
             }
 
-            if (current_level == 0) {
-                printf("size of L1: %ld\n", i);
-            }
-
             left[current_level] = i;
             right[current_level] = max_size - i;
 
@@ -165,7 +159,7 @@ void *create_threads(void *subroutine_pointer) {
     uint64_t *snq = current_subroutine->snq;
     opt_solution *optimum = current_subroutine->optimum;
 
-    if (current_level == MAX_LEVEL || current_level == n / 2) {
+    if (current_level == max_level || current_level == n / 2) {
         // printf("%ld %ld", left[0], right[0]);
         solutions_iterator_caller(left, right, n, q, current_level, snq, optimum);
         return 0;
@@ -257,13 +251,26 @@ void *create_threads(void *subroutine_pointer) {
 
 
 int main(__attribute__((unused)) int argc, char **argv) {
-    int q = (int) strtol(argv[1], NULL, 10);
-    int n = (int) strtol(argv[2], NULL, 10);
+    if (argc != 4) {
+        printf("invalid number of arguments");
+        return 1;
+    }
+
+    int level = (int) strtol(argv[1], NULL, 10);
+    int q = (int) strtol(argv[2], NULL, 10);
+    int n = (int) strtol(argv[3], NULL, 10);
+
+    if (level < 0) {
+        printf("invalid maxlevel value\n");
+        return 2;
+    }
 
     if (q < 2 || n < 3) {
         printf("invalid parameter values\n");
-        return 0;
+        return 3;
     }
+
+    max_level = level;
 
     uint64_t snq = 0;
 

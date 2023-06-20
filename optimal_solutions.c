@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 
 #include "common_functions.h"
 
@@ -97,8 +96,8 @@ int print_optimal_solutions_caller(uint64_t *left, uint64_t *right, int n, int q
 }
 
 int main(__attribute__((unused)) int argc, char **argv) {
-    int q = (int) strtol(argv[1], NULL, 10);
-    int n = (int) strtol(argv[2], NULL, 10);
+    int q = (int) strtol(argv[2], NULL, 10);
+    int n = (int) strtol(argv[3], NULL, 10);
 
     if (q < 2 || n < 3) {
         printf("invalid parameter values\n");
