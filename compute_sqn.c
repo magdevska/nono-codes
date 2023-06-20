@@ -23,7 +23,7 @@ typedef struct subroutine_parameters {
 
 int max_level = 0;
 
-int test_repetitions(uint64_t *left, uint64_t *right, int current_level) {
+int test_repetitions(const uint64_t *left, const uint64_t *right, int current_level) {
     int test_cut = 1;
 
     for (int i = 0; i < current_level; i++) {
@@ -35,7 +35,8 @@ int test_repetitions(uint64_t *left, uint64_t *right, int current_level) {
     return test_cut;
 }
 
-void update_solution(uint64_t *left, uint64_t *right, int n, int64_t *conditions, uint64_t *snq, opt_solution *optimum,
+void update_solution(const uint64_t *left, const uint64_t *right, int n, const int64_t *conditions, uint64_t *snq,
+                     opt_solution *optimum,
                      uint64_t current_code_size) {
     if (current_code_size > snq[0]) {
         snq[0] = current_code_size;
@@ -160,7 +161,6 @@ void *create_threads(void *subroutine_pointer) {
     opt_solution *optimum = current_subroutine->optimum;
 
     if (current_level == max_level || current_level == n / 2) {
-        // printf("%ld %ld", left[0], right[0]);
         solutions_iterator_caller(left, right, n, q, current_level, snq, optimum);
         return 0;
     }
@@ -182,7 +182,8 @@ void *create_threads(void *subroutine_pointer) {
 
     pthread_t *threads = (pthread_t *) malloc((subproblems + 1 - min_size) * sizeof(pthread_t));
 
-    subroutine_parameters **subroutine = (subroutine_parameters **) malloc((subproblems + 1 - min_size) * sizeof(subroutine_parameters *));
+    subroutine_parameters **subroutine = (subroutine_parameters **) malloc(
+            (subproblems + 1 - min_size) * sizeof(subroutine_parameters *));
 
     for (uint64_t i = 0; i < (subproblems + 1 - min_size); i++) {
         subleft[i] = (uint64_t *) malloc(n * sizeof(uint64_t));
@@ -223,7 +224,7 @@ void *create_threads(void *subroutine_pointer) {
     }
     free(threads);
     for (uint64_t i = 0; i < (subproblems + 1 - min_size); i++) {
-        while(suboptimum[i] != NULL) {
+        while (suboptimum[i] != NULL) {
             update_solution(suboptimum[i]->left, suboptimum[i]->right, n, suboptimum[i]->conditions, snq, optimum,
                             subsnq[i]);
             free(suboptimum[i]->left);
@@ -293,7 +294,6 @@ int main(__attribute__((unused)) int argc, char **argv) {
     subroutine->optimum = optimum;
 
     create_threads(subroutine);
-    //solutions_iterator_caller(left, right, n, q, 0, &snq, optimum);
 
     free(left);
     free(right);
