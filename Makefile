@@ -1,7 +1,6 @@
 CC=gcc
 OBJECTS=\
 	compute_sqn \
-	optimal_solutions \
 	sqn_lowerbound
 SHARED_FILES=common_functions.c common_functions.h
 CFLAGS=-std=c11 -Wall -Wextra -pedantic -pipe -lm -pthread
