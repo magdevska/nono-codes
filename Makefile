@@ -38,3 +38,7 @@ $(foreach obj, $(OBJECTS), consistency-$(obj)): consistency-%: %
 performance: $(OBJECTS)
 	mkdir -p performance/
 	hyperfine --warmup 2 --min-runs 10 --max-runs 500 --style full --time-unit millisecond --shell none --export-markdown "performance/$$(date --iso-8601=s).md" $(foreach obj, $(OBJECTS), "./$(obj).out 3 12 6")
+
+.PHONY: lint
+lint:
+	mypy --strict --strict-optional --pretty --show-error-context *.py

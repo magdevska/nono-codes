@@ -56,3 +56,6 @@ dkms.conf
 
 # performance benchmarking outputs
 performance/
+
+.venv/
+.mypy_cache/
