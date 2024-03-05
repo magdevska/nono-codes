@@ -1,17 +1,18 @@
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdio.h>
 #include "common_functions.h"
 
-uint64_t compute_max_cardinality(const uint64_t *left, const uint64_t *right, int set_index) {
-    uint64_t size = 0;
+uint128_t compute_max_cardinality(const uint128_t *left, const uint128_t *right, int set_index) {
+    uint128_t size = 0;
     for (int i = 0; i < set_index; i++) {
         size += left[i] * right[set_index - 1 - i];
     }
     return size;
 }
 
-int compute_conditions(const uint64_t *left, const uint64_t *right, int64_t **conditions,
-                       int64_t **parameters, int index, int n) {
+int compute_conditions(const uint128_t *left, const uint128_t *right, int128_t **conditions,
+                       int128_t **parameters, int index, int n) {
     for (int j = 0; j < index; j++) {
         for (int k = j - 1; k > -1; k--) {
             parameters[j][k] = 0;
@@ -26,7 +27,7 @@ int compute_conditions(const uint64_t *left, const uint64_t *right, int64_t **co
 
     conditions[0][n - index - 2] = right[index] - left[index];
     for (int j = 0; j < index; j++) {
-        int64_t value = 0;
+        int128_t value = 0;
         for (int l = 0; l <= j; l++) {
             value += parameters[j][l] * (right[l] - left[l]);
         }
@@ -44,10 +45,24 @@ int compute_conditions(const uint64_t *left, const uint64_t *right, int64_t **co
     return 0;
 }
 
-int64_t **initialize_conditions(int n) {
-    int64_t **conditions = (int64_t **) malloc(2 * sizeof(int64_t *));
-    conditions[0] = (int64_t *) malloc(n * sizeof(int64_t));
-    conditions[1] = (int64_t *) malloc(n * sizeof(int64_t));
+int128_t **initialize_conditions(int n) {
+    int128_t **conditions = (int128_t **) malloc(2 * sizeof(int128_t *));
+    conditions[0] = (int128_t *) malloc(n * sizeof(int128_t));
+    conditions[1] = (int128_t *) malloc(n * sizeof(int128_t));
 
     return conditions;
+}
+
+int print_u128_u(uint128_t u128) {
+    int rc;
+    if (u128 > UINT64_MAX) {
+        uint128_t leading = u128 / P10_UINT64;
+        uint64_t trailing = u128 % P10_UINT64;
+        rc = print_u128_u(leading);
+        rc += printf("%." TO_STRING(E10_UINT64) PRIu64, trailing);
+    } else {
+        uint64_t u64 = u128;
+        rc = printf("%" PRIu64, u64);
+    }
+    return rc;
 }
