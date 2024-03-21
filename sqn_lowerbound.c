@@ -64,7 +64,7 @@ int128_t compute_conditions_lowerbound(uint128_t *left, uint128_t *right, int128
 
     int128_t conditions = compute_max_cardinality(left, right, index);
     for (int j = 0; j < index; j++) {
-        int value = 0;
+        int128_t value = 0;
         for (int l = 0; l <= j; l++) {
             value += parameters[j][l] * (right[l] - left[l]);
         }
@@ -93,8 +93,8 @@ int lower_bound(uint128_t *left, uint128_t *right, int n, int q, int current_lev
 
     int n_bound = (int) (n / (q + 1)) + 1;
     if (current_level <= n_bound && current_level < n / 2) {
-        int128_t cond = compute_conditions_lowerbound(left, right, parameters, current_level);
-        for (int128_t i = 0; 2 * i <= cond && (uint128_t) i <= current_code_size; i++) {
+        uint128_t cond = compute_conditions_lowerbound(left, right, parameters, current_level);
+        for (uint128_t i = 0; 2 * i <= cond && i <= current_code_size; i++) {
             left[current_level] = i;
             right[current_level] = current_code_size - i;
             lower_bound(left, right, n, q, current_level + 1, parameters);

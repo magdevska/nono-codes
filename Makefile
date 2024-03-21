@@ -1,6 +1,10 @@
 CC=gcc
 OBJECTS=\
 	compute_sqn \
+	sqn_lowerbound \
+	balanced
+CONSISTENCY_OBJECTS=\
+	compute_sqn \
 	sqn_lowerbound
 SHARED_FILES=common_functions.c common_functions.h
 CFLAGS=-std=c11 -Wall -Wextra -pedantic -pipe -lm -pthread
@@ -22,20 +26,20 @@ clean:
 	rm -vf *.out.debug
 
 # a run-all consistency command
-# for each obj in OBJECTS, add another prerequisite on consistency-obj
+# for each obj in CONSISTENCY_OBJECTS, add another prerequisite on consistency-obj
 .PHONY: consistency
-consistency: $(foreach obj, $(OBJECTS), consistency-$(obj))
+consistency: $(foreach obj, $(CONSISTENCY_OBJECTS), consistency-$(obj))
 
 # single consistency runs
 # for each obj in OBJECTS, define a rule named consistency-obj (referenced above)
-$(foreach obj, $(OBJECTS), consistency-$(obj)): consistency-%: %
+$(foreach obj, $(CONSISTENCY_OBJECTS), consistency-$(obj)): consistency-%: %
 	mkdir -p consistency/
 	seq 2 6 | xargs -I XXX sh -c "seq 3 9 | xargs -I YYY ./$<.out 0 XXX YYY" | tee consistency/$<-serial.txt
 	seq 2 6 | xargs -I XXX sh -c "seq 3 9 | xargs -I YYY ./$<.out 2 XXX YYY" | tee consistency/$<-maxlevel2.txt
 
 # a prerequisite for performance runs (which benchmarks all binaries) is that they're compiled
 .PHONY: performance
-performance: $(OBJECTS)
+performance: $(CONSISTENCY_OBJECTS)
 	mkdir -p performance/
 	hyperfine --warmup 2 --min-runs 10 --max-runs 500 --style full --time-unit millisecond --shell none --export-markdown "performance/$$(date --iso-8601=s).md" $(foreach obj, $(OBJECTS), "./$(obj).out 3 12 6")
 
