@@ -1,1 +1,3 @@
 mypy==1.5.1
+black
+biopython==1.84

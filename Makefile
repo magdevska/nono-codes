@@ -46,3 +46,7 @@ performance: $(CONSISTENCY_OBJECTS)
 .PHONY: lint
 lint:
 	mypy --strict --strict-optional --pretty --show-error-context *.py
+
+.PHONY: format
+format:
+	black --line-length 120 --target-version py312 melting_temperature.py
