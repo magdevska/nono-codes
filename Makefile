@@ -49,4 +49,4 @@ lint:
 
 .PHONY: format
 format:
-	black --line-length 120 --target-version py312 melting_temperature.py
+	black --line-length 120 --target-version py312 *.py
