@@ -1,9 +1,7 @@
 import argparse
-import itertools
 import multiprocessing
 import time
 from asyncio import Future
-from collections.abc import Generator
 from concurrent.futures.process import ProcessPoolExecutor
 from dataclasses import dataclass
 from textwrap import dedent
@@ -19,56 +17,7 @@ class PrecomputationData:
     right_partition_sizes: list[int]
     left: list[list[str]]
     right: list[list[str]]
-
-    @classmethod
-    def _generate_pre_suf_fixes(cls, left: list[list[str]], right: list[list[str]], i: int) -> list[str]:
-        if i == 0:
-            return list("CGTA")
-
-        span_end = i - 1
-
-        result: list[str] = []
-        for j in range(i):
-            result.extend(f"{left}{right}" for left, right in itertools.product(left[j], right[span_end - j]))
-
-        return result
-
-    @classmethod
-    def _generate_partitions(
-        cls, pre_suf_fixes: list[str], left_partition_size: int, i: int
-    ) -> Generator[Any, tuple[list[str], list[str]], Any]:
-        all_indexes = set(range(len(pre_suf_fixes)))
-
-        left_index_variants = [set(items) for items in itertools.combinations(all_indexes, left_partition_size)]
-        right_index_variants = [all_indexes - left_variant for left_variant in left_index_variants]
-
-        for left_indices, right_indices in zip(left_index_variants, right_index_variants, strict=True):
-            retval_left = [pre_suf_fixes[li] for li in left_indices]
-            retval_right = [pre_suf_fixes[ri] for ri in right_indices]
-            yield retval_left, retval_right
-        return
-
-    @classmethod
-    def _generate_small_afixes(
-        cls,
-        left_partition_sizes: list[int],
-        right_partition_sizes: list[int],
-        left: list[list[str]],
-        right: list[list[str]],
-        i: int,
-    ) -> None:
-        if i >= 2:
-            n = len(left_partition_sizes)
-            for x in range(right_partition_sizes[n - 1]):
-                w = find_codeword(left_partition_sizes, right_partition_sizes, left, right, n - 1, x)
-            return
-
-        pre_suf_fixes = cls._generate_pre_suf_fixes(left, right, i)
-        for left_addendum, right_addendum in cls._generate_partitions(pre_suf_fixes, left_partition_sizes[i], i):
-            left[i] = left_addendum
-            right[i] = right_addendum
-            cls._generate_small_afixes(left_partition_sizes, right_partition_sizes, left, right, i + 1)
-            print("end iteration")
+    storage_depth: int
 
     @classmethod
     def _compute_all(cls, left: list[int], right: list[int], i: int) -> int:
@@ -79,31 +28,20 @@ class PrecomputationData:
 
     @classmethod
     def precompute(cls, codeword_length: int, *, do_print: bool = False) -> Self:
-        # left_partition_sizes: list[int]
-        # right_partition_sizes: list[int]
-        #    if (codeword_length < 6):
-        #        left_partition_sizes = [3, 0, 0, 0]
-        #        right_partition_sizes = [1, 3, 9, 27]
-        #    elif (codeword_length < 8):
-        #        left_partition_sizes = [3, 1, 0, 0]
-        #        right_partition_sizes = [1, 2, 7, 23]
-        #    elif (codeword_length < 12):
-        #        left_partition_sizes = [3, 2, 0, 0]
-        #        right_partition_sizes = [1, 1, 5, 17]
-        #    elif (codeword_length < 14):
-        #        left_partition_sizes = [3, 2, 1, 0]
-        #        right_partition_sizes = [1, 1, 4, 15]
-        #    elif (codeword_length < 16):
-        #        left_partition_sizes = [3, 2, 2, 0]
-        #        right_partition_sizes = [1, 1, 3, 13]
         if codeword_length < 23:
-            left_partition_sizes = [3, 3, 0, 0]
-            right_partition_sizes = [1, 0, 3, 9]
+            left_partition_sizes = [3, 3]
+            right_partition_sizes = [1, 0]
+            storage_depth = 2
+            left = [["C", "G", "A"], ["CT", "GT", "AT"]]
+            right = [["T"], []]
         else:
             left_partition_sizes = [3, 3, 0, 1]
             right_partition_sizes = [1, 0, 3, 8]
+            storage_depth = 4
+            left = [["C", "G", "A"], ["CT", "GT", "AT"], [], ["CCTT"]]
+            right = [["T"], [], ["CTT", "GTT", "ATT"], ["CGTT", "CATT", "GCTT", "GGTT", "GATT", "ACTT", "AGTT", "AATT"]]
 
-        for i in range(4, codeword_length):
+        for i in range(storage_depth, codeword_length):
             left_partition_sizes.append(0)
             s = cls._compute_all(left_partition_sizes, right_partition_sizes, i)
             right_partition_sizes.append(s)
@@ -112,18 +50,13 @@ class PrecomputationData:
         if do_print:
             print(len(left_partition_sizes))
 
-        left = [[] for _ in range(codeword_length)]
-        right = [[] for _ in range(codeword_length)]
-
-        left[0] = ["C", "G", "A"]
-        right[0] = ["T"]
-        left[1] = ["CT", "GT", "AT"]
         return cls(
             codeword_length=codeword_length,
             left_partition_sizes=left_partition_sizes,
             right_partition_sizes=right_partition_sizes,
             left=left,
             right=right,
+            storage_depth=storage_depth,
         )
 
 
@@ -134,8 +67,9 @@ def find_codeword(
     right: list[list[str]],
     i: int,
     k: int,
+    storage_depth: int,
 ) -> str:
-    if i < 2:
+    if i < storage_depth:
         return right[i][k]
 
     s_old = 0
@@ -149,7 +83,7 @@ def find_codeword(
     new_k = (k - s_old) // left_partition_sizes[j]
 
     return left[j][(k - s_old) % left_partition_sizes[j]] + find_codeword(
-        left_partition_sizes, right_partition_sizes, left, right, i - 1 - j, new_k
+        left_partition_sizes, right_partition_sizes, left, right, i - 1 - j, new_k, storage_depth
     )
 
 
@@ -178,6 +112,7 @@ def batched_parallel_unit_of_work(codeword_length: int, unit_of_work_offsets: ra
             data.right,
             codeword_length - 1,
             uow_offset,
+            data.storage_depth,
         )
         temperature = MeltingTemp.Tm_NN(w)
         if 60.0 >= temperature >= 55.0:
@@ -219,7 +154,6 @@ def main() -> None:
         )
     )
 
-    # generate_small_afixes(left_partition_sizes,right_partition_sizes,left,right,2)
     pool = ProcessPoolExecutor(max_workers=process_count)
 
     time_start = time.time()
