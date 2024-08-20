@@ -114,7 +114,7 @@ def batched_parallel_unit_of_work(codeword_length: int, unit_of_work_offsets: ra
             uow_offset,
             data.storage_depth,
         )
-        temperature = MeltingTemp.Tm_NN(w)
+        temperature = MeltingTemp.Tm_NN(w, dnac2=0)
         if 60.0 >= temperature >= 55.0:
             result += 1
     return result
