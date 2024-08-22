@@ -61,13 +61,13 @@ class PrecomputationData:
 
 
 def find_codeword(
-    left_partition_sizes: list[int],
-    right_partition_sizes: list[int],
-    left: list[list[str]],
-    right: list[list[str]],
-    i: int,
-    k: int,
-    storage_depth: int,
+        left_partition_sizes: list[int],
+        right_partition_sizes: list[int],
+        left: list[list[str]],
+        right: list[list[str]],
+        i: int,
+        k: int,
+        storage_depth: int,
 ) -> str:
     if i < storage_depth:
         return right[i][k]
@@ -99,11 +99,11 @@ def chunked_range(range_min: int, range_max: int, num_chunks: int) -> list[range
 
 
 # returns increment of adequate_melting
-def batched_parallel_unit_of_work(codeword_length: int, unit_of_work_offsets: range) -> int:
+def batched_parallel_unit_of_work(codeword_length: int, unit_of_work_offsets: range) -> list[int]:
     # every process precomputes this as it takes negligible time
     data = PrecomputationData.precompute(codeword_length)
 
-    result = 0
+    result = [0, 0, 0, 0, 0, 0, 0, 0]
     for uow_offset in unit_of_work_offsets:
         w = find_codeword(
             data.left_partition_sizes,
@@ -115,8 +115,23 @@ def batched_parallel_unit_of_work(codeword_length: int, unit_of_work_offsets: ra
             data.storage_depth,
         )
         temperature = MeltingTemp.Tm_NN(w, dnac2=0)
-        if 60.0 >= temperature >= 55.0:
-            result += 1
+        if 50 <= temperature <= 52:
+            result[0] += 1
+        elif 52 < temperature <= 54:
+            result[1] += 1
+        elif 54 < temperature <= 56:
+            result[2] += 1
+        elif 56 < temperature <= 58:
+            result[3] += 1
+        elif 58 < temperature <= 60:
+            result[4] += 1
+        elif 60 < temperature <= 62:
+            result[5] += 1
+        elif 62 < temperature and codeword_length > 16:
+            prefix_temperature = MeltingTemp.Tm_NN(w[0:16], dnac2=0)
+            if prefix_temperature < 62:
+                result[6] += 1
+            result[7] += 1
     return result
 
 
@@ -160,11 +175,11 @@ def main() -> None:
     futures: list[Future] = []
     for chunk in per_process_chunks:
         futures.append(pool.submit(batched_parallel_unit_of_work, data.codeword_length, chunk))
-    num_of_adequate_melting_temps = sum(f.result() for f in futures)
+    num_of_adequate_melting_temps = [sum(f.result()[i] for f in futures) for i in range(8)]
     time_end = time.time()
 
     print(
-        f"### RESULT ### num of adequate melting temps (node {args.node_index} of {args.node_count}): {num_of_adequate_melting_temps}"
+        f"### RESULT ### num of adequate melting temps (node {args.node_index} of {args.node_count}): {num_of_adequate_melting_temps !r}"
     )
     print(f"time taken (node {args.node_index} of {args.node_count}): {int(time_end - time_start)} seconds")
 
