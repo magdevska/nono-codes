@@ -221,7 +221,7 @@ def main() -> None:
 
     print(
         f"### RESULT ### num of adequate melting temps per range (node {args.node_index} of {args.node_count}): {num_of_adequate_melting_temps !r} \n"
-        f"total number of adequate melting temps in partition # {args.partition_choice}: {sum(num_of_adequate_melting_temps[0:7])}"
+        f"total number of adequate melting temps in partition # {args.partition_choice}: {sum(num_of_adequate_melting_temps[0:6])}"
     )
     print(f"time taken (node {args.node_index} of {args.node_count}): {int(time_end - time_start)} seconds")
 
